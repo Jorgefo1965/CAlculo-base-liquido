@@ -2,9 +2,8 @@ name: Actualizar Indicadores Económicos
 
 on:
   schedule:
-    # Se ejecuta todos los días a las 09:00 UTC (05:00 AM hora de Chile)
     - cron: '0 9 * * *'
-  workflow_dispatch: # Permite ejecutar la actualización manualmente si deseas probarla
+  workflow_dispatch:
 
 jobs:
   update-data:
@@ -19,7 +18,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Obtener indicadores desde la API y actualizar app.js
         run: |
@@ -36,16 +35,15 @@ jobs:
                 const uf = json.uf.valor;
                 const utm = json.utm.valor;
 
-                if (!uf || !utm) throw new Error('Datos invalidos recibidos de la API');
+                if (!uf || !utm) throw new Error('Datos inválidos recibidos de la API');
 
                 let content = fs.readFileSync('app.js', 'utf8');
 
-                // Reemplaza los valores de UF y UTM preservando el resto de las variables legalmente vigentes
                 content = content.replace(/uf:\s*[\d.]+/g, 'uf: ' + uf);
                 content = content.replace(/utm:\s*[\d.]+/g, 'utm: ' + utm);
 
                 fs.writeFileSync('app.js', content, 'utf8');
-                console.log('app.js actualizado con exito: UF ' + uf + ' | UTM ' + utm);
+                console.log('app.js actualizado con éxito: UF ' + uf + ' | UTM ' + utm);
               } catch (e) {
                 console.error('Error procesando datos:', e.message);
                 process.exit(1);
@@ -66,5 +64,5 @@ jobs:
             git commit -m "bot: actualización automática de indicadores económicos (UF/UTM)"
             git push
           else
-            console.log("Los indicadores no han cambiado. No requiere commit.");
+            echo "Los indicadores no han cambiado. No requiere commit."
           fi
