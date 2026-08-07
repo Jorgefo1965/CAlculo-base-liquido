@@ -123,3 +123,4 @@ document.getElementById('modo').addEventListener('change', (e) => {
 });
 
 cargarIndicadores();
+
