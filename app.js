@@ -1,6 +1,6 @@
 // VALORES DE RESPALDO (SE USAN SI FALLA LA CONEXIÓN A LA API)
 let INDICADORES = {
-  uf: 40859.28,
+  uf: 40860.6,
   utm: 71649,
   imm: 553553
 };
