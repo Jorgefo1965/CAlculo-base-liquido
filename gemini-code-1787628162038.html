@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Sueldo Chile</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      max-width: 480px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+      font-size: 14px;
+    }
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cccccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .checkbox-group input {
+      width: 16px;
+      height: 16px;
+    }
+    .checkbox-group label {
+      margin-bottom: 0;
+      font-weight: normal;
+      font-size: 14px;
+      color: #555;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0066ff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #0052cc;
+    }
+    #indicadores {
+      background-color: #eef6ff;
+      border: 1px solid #d0e3ff;
+      color: #004085;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #resultado {
+      margin-top: 20px;
+      background-color: #f0fff4;
+      border: 1px solid #c6f6d5;
+      border-radius: 8px;
+      padding: 16px;
+      display: none;
+    }
+    #resultado h3 {
+      margin-top: 0;
+      color: #22543d;
+      font-size: 18px;
+      border-bottom: 1px solid #c6f6d5;
+      padding-bottom: 8px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #2d3748;
+    }
+    .row.total {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1a202c;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 2px solid #2f855a;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Calculadora de Sueldo Chile <span style="font-size:14px; font-weight:normal; color:#666;">CL</span></h2>
+  
+  <div id="indicadores">Cargando indicadores económicos...</div>
+
+  <div class="form-group">
+    <label for="modo">Modo de Cálculo:</label>
+    <select id="modo">
+      <option value="brutoALiquido">Calcular Líquido desde Bruto</option>
+      <option value="liquidoABruto">Calcular Bruto desde Líquido</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label id="lblMonto" for="monto">Sueldo Base ($ CLP):</label>
+    <input type="text" id="monto" inputmode="numeric" placeholder="Ej: 1.000.000">
+  </div>
+
+  <div class="form-group">
+    <label for="modoGratificacion">Gratificación Legal:</label>
+    <select id="modoGratificacion">
+      <option value="legal">Legal Tradicional (25% tope 4.75 IMM)</option>
+      <option value="personalizada">Porcentaje Personalizado</option>
+      <option value="sinGratificacion">Sin Gratificación ($0)</option>
+    </select>
+  </div>
+
+  <div class="form-group" id="groupGratificacionPersonalizada" style="display: none; background-color: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+    <label for="porcentajeGratificacion">Porcentaje de Gratificación (%):</label>
+    <input type="number" id="porcentajeGratificacion" placeholder="Ej: 25" min="0" max="100" step="1" value="25">
+    
+    <div class="checkbox-group">
+      <input type="checkbox" id="conTopeGratificacion" checked>
+      <label for="conTopeGratificacion">Aplicar Tope Legal (4.75 IMM anual / 12)</label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="bonosImponibles">Bonos Imponibles (Comisiones, Aguinaldos):</label>
+    <input type="text" id="bonosImponibles" inputmode="numeric" placeholder="0">
+  </div>
+
+  <div class="form-group">
+    <label for="bonosNoImponibles">Bonos No Imponibles (Colación / Movilización):</label>
+    <input type="text" id="bonosNoImponibles" inputmode="numeric" placeholder="0">
+  </div>
+
+  <div class="form-group">
+    <label for="regimenApv">Régimen APV:</label>
+    <select id="regimenApv">
+      <option value="ninguno">Sin APV</option>
+      <option value="A">Régimen A (Bonificación 15% Estado)</option>
+      <option value="B">Régimen B (Rebaja de Impuesto Único)</option>
+    </select>
+    <button type="button" onclick="abrirModalAPV()" style="background: none; color: #0066ff; border: none; padding: 4px 0; font-size: 13px; font-weight: normal; cursor: pointer; text-decoration: underline; text-align: left; margin-top: 4px;">💡 ¿Qué Régimen me conviene?</button>
+  </div>
+
+  <div class="form-group" id="groupMontoApv" style="display: none;">
+    <label for="montoApv">Monto APV Mensual ($ CLP):</label>
+    <input type="text" id="montoApv" inputmode="numeric" placeholder="0">
+  </div>
+
+  <div class="form-group">
+    <label for="afp">AFP:</label>
+    <select id="afp">
+      <option value="habitat">AFP Habitat (11.27%)</option>
+      <option value="uno">AFP Uno (10.46%)</option>
+      <option value="modelo">AFP Modelo (10.58%)</option>
+      <option value="planvital">AFP PlanVital (11.16%)</option>
+      <option value="capital">AFP Capital (11.44%)</option>
+      <option value="cuprum">AFP Cuprum (11.44%)</option>
+      <option value="provida">AFP Provida (11.45%)</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="tipoContrato">Tipo de Contrato:</label>
+    <select id="tipoContrato">
+      <option value="indefinido">Indefinido</option>
+      <option value="plazoFijo">Plazo Fijo / Obra (Exento de Seguro)</option>
+    </select>
+  </div>
+
+  <div class="form-group" id="groupCondicionCesantia">
+    <label for="condicionCesantia">Condición Seguro de Cesantía:</label>
+    <select id="condicionCesantia">
+      <option value="normal">Menos de 11 años en la empresa (Cotiza 0.6%)</option>
+      <option value="mas11Anos">11 años o más en la empresa (Exento - 0.0%)</option>
+      <option value="pensionado">Pensionado Vejez / Invalidez Total (Exento - 0.0%)</option>
+    </select>
+  </div>
+
+  <button onclick="ejecutarCalculo()">Calcular</button>
+
+  <div id="resultado"></div>
+</div>
+
+<!-- MODAL RECOMENDADOR DE APV -->
+<div id="modalAPV" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;">
+  <div style="background: #fff; padding: 24px; border-radius: 10px; max-width: 400px; width: 90%; position: relative;">
+    <h3 style="margin-top: 0; color: #1a1a1a;">Análisis de Conveniencia APV</h3>
+    <div id="contenidoModalAPV" style="font-size: 14px; color: #4a5568; line-height: 1.5; margin-bottom: 20px;"></div>
+    <button onclick="cerrarModalAPV()" style="background: #4a5568; margin-top: 0;">Cerrar</button>
+  </div>
+</div>
+
+<script>
+// VALORES DE RESPALDO (SE USAN SI FALLA LA CONEXIÓN A LA API)
+let INDICADORES = {
+  uf: 40844.79,
+  utm: 71649,
+  imm: 553553
+};
+
+const AFPS = {
+  uno: { nombre: 'AFP Uno', tasa: 0.1046 },
+  modelo: { nombre: 'AFP Modelo', tasa: 0.1058 },
+  planvital: { nombre: 'AFP PlanVital', tasa: 0.1116 },
+  habitat: { nombre: 'AFP Habitat', tasa: 0.1127 },
+  capital: { nombre: 'AFP Capital', tasa: 0.1144 },
+  cuprum: { nombre: 'AFP Cuprum', tasa: 0.1144 },
+  provida: { nombre: 'AFP Provida', tasa: 0.1145 }
+};
+
+// TABLA OFICIAL SII (8 TRAMOS VIGENTES)
+const TRAMOS_IMPUESTO = [
+  { desde: 0, hasta: 13.5, factor: 0, rebaja: 0 },
+  { desde: 13.5, hasta: 30, factor: 0.04, rebaja: 0.54 },
+  { desde: 30, hasta: 50, factor: 0.08, rebaja: 1.74 },
+  { desde: 50, hasta: 70, factor: 0.135, rebaja: 4.49 },
+  { desde: 70, hasta: 90, factor: 0.23, rebaja: 11.14 },
+  { desde: 90, hasta: 120, factor: 0.304, rebaja: 17.8 },
+  { desde: 120, hasta: 310, factor: 0.35, rebaja: 23.32 },
+  { desde: 310, hasta: Infinity, factor: 0.40, rebaja: 38.82 }
+];
+
+function formatearNumero(valor) {
+  const soloNumeros = valor.replace(/\D/g, '');
+  if (!soloNumeros) return '';
+  return parseInt(soloNumeros, 10).toLocaleString('es-CL');
+}
+
+function obtenerValorNumerico(id) {
+  const elem = document.getElementById(id);
+  if (!elem) return 0;
+  const soloNumeros = elem.value.replace(/\D/g, '');
+  return parseFloat(soloNumeros) || 0;
+}
+
+function aplicarFormatoEnVivo(id) {
+  const elem = document.getElementById(id);
+  if (!elem) return;
+  elem.type = 'text';
+  elem.addEventListener('input', (e) => {
+    e.target.value = formatearNumero(e.target.value);
+  });
+}
+
+// CARGA EN TIEMPO REAL DESDE MINDICADOR.CL
+async function cargarIndicadores() {
+  const elemIndicadores = document.getElementById('indicadores');
+  try {
+    const res = await fetch('https://mindicador.cl/api');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.uf && data.uf.valor) INDICADORES.uf = data.uf.valor;
+      if (data.utm && data.utm.valor) INDICADORES.utm = data.utm.valor;
+    }
+  } catch (error) {
+    console.warn('No se pudo conectar a mindicador.cl, usando valores de respaldo.', error);
+  } finally {
+    if (elemIndicadores) {
+      elemIndicadores.innerText = `Valores oficiales vigentes: UF $${Math.round(INDICADORES.uf).toLocaleString('es-CL')} | UTM $${INDICADORES.utm.toLocaleString('es-CL')}`;
+    }
+  }
+}
+
+function calcularImpuesto(baseTributable, utm) {
+  const baseUTM = baseTributable / utm;
+  const tramo = TRAMOS_IMPUESTO.find(t => baseUTM > t.desde && baseUTM <= t.hasta);
+  if (!tramo || tramo.factor === 0) return 0;
+  return Math.max(0, Math.round((baseTributable * tramo.factor) - (tramo.rebaja * utm)));
+}
+
+function calcularLiquido(sueldoBase, afpKey, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv = 'ninguno', montoApv = 0) {
+  const afp = AFPS[afpKey] || AFPS.habitat;
+  
+  // BASE PARA GRATIFICACIÓN: SUELDO BASE + BONOS IMPONIBLES
+  const baseGratificable = sueldoBase + bonosImp;
+  
+  let gratificacion = 0;
+  const topeGratMensual = Math.round((4.75 * INDICADORES.imm) / 12);
+
+  if (configGrat.modo === 'legal') {
+    gratificacion = Math.min(Math.round(baseGratificable * 0.25), topeGratMensual);
+  } else if (configGrat.modo === 'personalizada') {
+    const porcentajeDecimal = (configGrat.porcentaje || 0) / 100;
+    const montoCalculado = Math.round(baseGratificable * porcentajeDecimal);
+    
+    if (configGrat.conTope) {
+      gratificacion = Math.min(montoCalculado, topeGratMensual);
+    } else {
+      gratificacion = montoCalculado; // Sin tope legal sobre (SB + Bonos Imponibles)
+    }
+  } else {
+    gratificacion = 0; // sinGratificacion
+  }
+
+  const totalImponible = sueldoBase + gratificacion + bonosImp;
+
+  const topePrevisionalCLP = 90.0 * INDICADORES.uf;
+  const topeCesantiaCLP = 135.2 * INDICADORES.uf;
+
+  const imponiblePrevisional = Math.min(totalImponible, topePrevisionalCLP);
+  const imponibleCesantia = Math.min(totalImponible, topeCesantiaCLP);
+
+  const afpMonto = Math.round(imponiblePrevisional * afp.tasa);
+  const saludMonto = Math.round(imponiblePrevisional * 0.07);
+  
+  let tasaCesantia = 0.0;
+  if (tipoContrato === 'indefinido' && condicionCesantia === 'normal') {
+    tasaCesantia = 0.006;
+  }
+  const cesantiaMonto = Math.round(imponibleCesantia * tasaCesantia);
+  
+  const totalPrevisional = afpMonto + saludMonto + cesantiaMonto;
+
+  const topeApvB = 50 * INDICADORES.uf;
+  const apvRebajable = (regimenApv === 'B') ? Math.min(montoApv, topeApvB) : 0;
+
+  const baseTributable = Math.max(0, totalImponible - totalPrevisional - apvRebajable);
+  const impuesto = calcularImpuesto(baseTributable, INDICADORES.utm);
+
+  const apvTotalDescuento = (regimenApv !== 'ninguno') ? montoApv : 0;
+  const liquido = totalImponible - totalPrevisional - impuesto - apvTotalDescuento + bonosNoImp;
+
+  return { 
+    sueldoBase, gratificacion, bonosImp, totalImponible, 
+    afpMonto, saludMonto, cesantiaMonto, apvMonto: apvTotalDescuento, 
+    regimenApv, impuesto, bonosNoImp, liquido 
+  };
+}
+
+function calcularBrutoDesdeLiquido(liquidoDeseado, afpKey, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv) {
+  let min = 0, max = liquidoDeseado * 3, res = null;
+  while (min <= max) {
+    let mid = Math.floor((min + max) / 2);
+    res = calcularLiquido(mid, afpKey, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv);
+    let diff = res.liquido - liquidoDeseado;
+    if (Math.abs(diff) <= 1) break;
+    if (diff < 0) min = mid + 1;
+    else max = mid - 1;
+  }
+  return res;
+}
+
+function ejecutarCalculo() {
+  const modo = document.getElementById('modo').value;
+  const monto = obtenerValorNumerico('monto');
+  const afp = document.getElementById('afp').value;
+  const bonosImp = obtenerValorNumerico('bonosImponibles');
+  const bonosNoImp = obtenerValorNumerico('bonosNoImponibles');
+  
+  const modoGratificacion = document.getElementById('modoGratificacion').value;
+  const porcentajeGratificacion = parseFloat(document.getElementById('porcentajeGratificacion').value) || 0;
+  const conTopeGratificacion = document.getElementById('conTopeGratificacion').checked;
+
+  const configGrat = {
+    modo: modoGratificacion,
+    porcentaje: porcentajeGratificacion,
+    conTope: conTopeGratificacion
+  };
+
+  const tipoContrato = document.getElementById('tipoContrato').value;
+  const condicionCesantia = document.getElementById('condicionCesantia').value;
+  const regimenApv = document.getElementById('regimenApv').value;
+  const montoApv = obtenerValorNumerico('montoApv');
+
+  let res = (modo === 'brutoALiquido') 
+    ? calcularLiquido(monto, afp, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv)
+    : calcularBrutoDesdeLiquido(monto, afp, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv);
+
+  const box = document.getElementById('resultado');
+  box.style.display = 'block';
+  box.innerHTML = `
+    <h3>Resultado del Cálculo</h3>
+    <div class="row"><span>Sueldo Base Requerido:</span> <strong>$${res.sueldoBase.toLocaleString('es-CL')}</strong></div>
+    <div class="row"><span>Gratificación Legal:</span> <strong>$${res.gratificacion.toLocaleString('es-CL')}</strong></div>
+    <div class="row"><span>Bonos Imponibles:</span> <strong>$${res.bonosImp.toLocaleString('es-CL')}</strong></div>
+    <div class="row"><span>Total Imponible:</span> <strong>$${res.totalImponible.toLocaleString('es-CL')}</strong></div>
+    <hr style="border: 0; border-top: 1px solid #d8f3dc; margin: 8px 0;">
+    <div class="row"><span>Descuento AFP:</span> <span>-$${res.afpMonto.toLocaleString('es-CL')}</span></div>
+    <div class="row"><span>Descuento Salud (7%):</span> <span>-$${res.saludMonto.toLocaleString('es-CL')}</span></div>
+    <div class="row"><span>Seguro Cesantía:</span> <span>-$${res.cesantiaMonto.toLocaleString('es-CL')}</span></div>
+    ${res.apvMonto > 0 ? `<div class="row"><span>Ahorro APV (Régimen ${res.regimenApv}):</span> <span>-$${res.apvMonto.toLocaleString('es-CL')}</span></div>` : ''}
+    <div class="row"><span>Impuesto Único:</span> <span>-$${res.impuesto.toLocaleString('es-CL')}</span></div>
+    <div class="row"><span>Bonos No Imponibles:</span> <span>+$${res.bonosNoImp.toLocaleString('es-CL')}</span></div>
+    <div class="row total"><span>Sueldo Líquido Final:</span> <span>$${res.liquido.toLocaleString('es-CL')}</span></div>
+  `;
+}
+
+// CONTROL DE VISIBILIDAD DINÁMICA
+function actualizarDinamicos() {
+  const modoGrat = document.getElementById('modoGratificacion').value;
+  document.getElementById('groupGratificacionPersonalizada').style.display = (modoGrat === 'personalizada') ? 'block' : 'none';
+
+  const regApv = document.getElementById('regimenApv').value;
+  document.getElementById('groupMontoApv').style.display = (regApv === 'ninguno') ? 'none' : 'block';
+
+  const tContrato = document.getElementById('tipoContrato').value;
+  document.getElementById('groupCondicionCesantia').style.display = (tContrato === 'plazoFijo') ? 'none' : 'block';
+
+  const modoCalc = document.getElementById('modo').value;
+  document.getElementById('lblMonto').innerText = (modoCalc === 'brutoALiquido') ? 'Sueldo Base ($ CLP):' : 'Sueldo Líquido Deseado ($ CLP):';
+}
+
+// EVENTOS DE CAMBIO INMEDIATO
+['modoGratificacion', 'regimenApv', 'tipoContrato', 'modo'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('change', actualizarDinamicos);
+});
+
+// APLICAR FORMATO EN VIVO
+aplicarFormatoEnVivo('monto');
+aplicarFormatoEnVivo('bonosImponibles');
+aplicarFormatoEnVivo('bonosNoImponibles');
+aplicarFormatoEnVivo('montoApv');
+
+// INICIALIZACIÓN
+window.addEventListener('DOMContentLoaded', () => {
+  actualizarDinamicos();
+  cargarIndicadores();
+});
+
+// RECOMENDADOR APV
+function abrirModalAPV() {
+  const montoInput = obtenerValorNumerico('monto');
+  const modal = document.getElementById('modalAPV');
+  const contenido = document.getElementById('contenidoModalAPV');
+  
+  if (montoInput === 0) {
+    contenido.innerHTML = `<p>Por favor, ingresa primero un <strong>Sueldo Base</strong> en la calculadora para evaluar la conveniencia tributaria.</p>`;
+  } else {
+    const utm = INDICADORES.utm;
+    const baseUTM = montoInput / utm;
+    let recomendacion = "";
+    
+    if (baseUTM <= 13.5) {
+      recomendacion = `
+        <p><strong>Régimen Recomendado: RÉGIMEN A</strong></p>
+        <p>Tu nivel de renta se encuentra en el <strong>tramo exento de impuesto (0%)</strong>.</p>
+        <p>En el Régimen B obtendrías $0 de ahorro tributario. En cambio, en el <strong>Régimen A</strong> el Estado te regala un <strong>15% adicional</strong> sobre todo lo que ahorres (con tope de 6 UTM al año).</p>`;
+    } else if (baseUTM <= 30) {
+      recomendacion = `
+        <p><strong>Régimen Recomendado: RÉGIMEN A</strong></p>
+        <p>Tu renta está en el tramo del <strong>4% de Impuesto Único</strong>.</p>
+        <p>La bonificación estatal del <strong>15% (Régimen A)</strong> es considerablemente mayor al 4% de rebaja impositiva que obtendrías en el Régimen B.</p>`;
+    } else if (baseUTM <= 50) {
+      recomendacion = `
+        <p><strong>Régimen Recomendado: RÉGIMEN A / MIXTO</strong></p>
+        <p>Tu renta está en el tramo del <strong>8% de Impuesto Único</strong>.</p>
+        <p>El Régimen A (15% del Estado) sigue siendo superior para aportes moderados. Si proyectas ahorrar montos muy altos (más de 40 UTM al año), te convendrá una estrategia mixta (A hasta el tope estatal y B para el resto).</p>`;
+    } else {
+      recomendacion = `
+        <p><strong>Régimen Recomendado: RÉGIMEN B</strong></p>
+        <p>Tu renta está en un tramo alto de Impuesto Único (<strong>13.5% o superior</strong>).</p>
+        <p>Te conviene el <strong>Régimen B</strong>, ya que el ahorro directo de impuestos al descontar tu APV de la base tributable supera el beneficio del Régimen A y no tiene el tope tan acotado de las 6 UTM anuales.</p>`;
+    }
+    contenido.innerHTML = recomendacion;
+  }
+  modal.style.display = 'flex';
+}
+
+function cerrarModalAPV() {
+  document.getElementById('modalAPV').style.display = 'none';
+}
+</script>
+</body>
+</html>
