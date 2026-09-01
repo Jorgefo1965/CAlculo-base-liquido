@@ -1,583 +1,1089 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Sueldo Chile</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f4f6f9;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-    }
-    .container {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      max-width: 480px;
-      width: 100%;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #1a1a1a;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #333;
-      font-size: 14px;
-    }
-    input[type="text"], input[type="number"], select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #cccccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      font-size: 15px;
-    }
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
-    .checkbox-group input {
-      width: 16px;
-      height: 16px;
-    }
-    .checkbox-group label {
-      margin-bottom: 0;
-      font-weight: normal;
-      font-size: 14px;
-      color: #555;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #0066ff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #0052cc;
-    }
-    #indicadores {
-      background-color: #eef6ff;
-      border: 1px solid #d0e3ff;
-      color: #004085;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 13px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #resultado {
-      margin-top: 20px;
-      background-color: #f0fff4;
-      border: 1px solid #c6f6d5;
-      border-radius: 8px;
-      padding: 16px;
-      display: none;
-    }
-    #resultado h3 {
-      margin-top: 0;
-      color: #22543d;
-      font-size: 18px;
-      border-bottom: 1px solid #c6f6d5;
-      padding-bottom: 8px;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #2d3748;
-    }
-    .row.total {
-      font-size: 16px;
-      font-weight: bold;
-      color: #1a202c;
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 2px solid #2f855a;
-    }
-    .ahorro-badge {
-      background-color: #d1fae5;
-      color: #065f46;
-      font-size: 13px;
-      padding: 8px 10px;
-      border-radius: 6px;
-      margin-top: 6px;
-      margin-bottom: 10px;
-      border-left: 3px solid #10b981;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Closet — Buscador de carteras</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAEfklEQVR4nO3dzXETSxiG0ZGL0IiCLUUAbBwEGwKg2DoK58ZdXETZ8vxP93Tr1TlLwFLX6PHHp1GVfRk68OPL5z+tz8Bxzy+vl9ZnaHIAAT+GFoGf9oQifmxnxV31SUTMmJpxV3lgIbNGjbCfSj+gmFmrRivFvkOEzBGlpnWRCS1mjirV0KHvCiFTw5FpvXtCi5lajrS1K2gxU9vexjYHLWbOsqe1TUGLmbNtbW510GKmlS3trQpazLS2tsHFoMVML9a0WPyjb2hpNmjTmd4sNTkZtJjp1VybVg6ijAZtOtO7qUY/BC1m7sVYq1YOorwL2nTm3tw2a0ITRdBE+Re0dYN79bZdE5oon1ofINW3n79n//7X968nneSxXIbBulHSUsi3hF3O88vrxYQuZGvIt18n7DLs0AXsjbn0Y2CHPqR0hKb1cRf78z5rYp4K88jXMk/QO5S6g+FOSHlWjoK2Bnj99/bncrwp3GgqviPT9MhqwnuC3qBGzEuPIeptBL1SzZiXHkvU6wn6gBpv2rwRPEbQK/QwIXs4wz0Q9E41J6kpvZ+gF4xNxjOCG3sOU3qZoIki6BmtpvPcc5nS8wRNFEFPaD2d557TlJ4maKIImiiCHtHLujH33NaOcYImiqCJIugbva0bc2ewdnwkaKIImiiCJoqg3+h1f76yRy8TNFEETRRBE0XQRBE0UQT9V+93OK7c6ZgnaKIImiiCJoqgiSJoogiaKIImiqCJEv1Lg876wKHkBzD3eOaeRP7SoJ4+Obs9Sy8hpf5OxLiVo+eYp/6spd7Oc1RU0D29OHNn6emcw9DfeY6ICTrpRWkh5frFBA3DEBJ0ynRpLeE6RgTdo7m7B2l3Fnoi6IrGwhVzXZH3oXsi4HOZ0EQRNFEEXUCpuwMJdxlaE3QhR2MUcxmCLmhvlGIux12OwsTZlglNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRIkI+tf3r62PECHhOkYEDVcxQSdMl5ZSrl9M0MOQ86KcLem6RQU9DFkvzhnSrtflx5fPf1ofopZvP3+3PkK30kK+ig6axxO3cvDYBE0UQRNF0EQRNFEETZSn55fXS+tDQAnPL68XE5oogiaKoInyNAz/7x6tDwJHXBs2oYkiaKL8C9rawb16264JTRRBE+Vd0NYO7s1tsyY0UT4EbUpzL8ZaHZ3QoqZ3U41aOYgyGbQpTa/m2pyd0KKmN0tNWjmIshi0KU0v1rS4akKLmtbWNrh65RA1rWxpb9MOLWrOtrW5zW8KRc1Z9rS26y6HqKltb2O7b9uJmlqOtFUkSj9jmhJKDMkiH6yY1hxVqqHiIZrWbFF6GBb/6Nu0Zq0arVSNz7RmTM2hd9o0FfdjO+t/7ibrgbgfQ4v1s4t9V+AZenj/9B9gKmwilGY9BgAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAEfklEQVR4nO3dzXETSxiG0ZGL0IiCLUUAbBwEGwKg2DoK58ZdXETZ8vxP93Tr1TlLwFLX6PHHp1GVfRk68OPL5z+tz8Bxzy+vl9ZnaHIAAT+GFoGf9oQifmxnxV31SUTMmJpxV3lgIbNGjbCfSj+gmFmrRivFvkOEzBGlpnWRCS1mjirV0KHvCiFTw5FpvXtCi5lajrS1K2gxU9vexjYHLWbOsqe1TUGLmbNtbW510GKmlS3trQpazLS2tsHFoMVML9a0WPyjb2hpNmjTmd4sNTkZtJjp1VybVg6ijAZtOtO7qUY/BC1m7sVYq1YOorwL2nTm3tw2a0ITRdBE+Re0dYN79bZdE5oon1ofINW3n79n//7X968nneSxXIbBulHSUsi3hF3O88vrxYQuZGvIt18n7DLs0AXsjbn0Y2CHPqR0hKb1cRf78z5rYp4K88jXMk/QO5S6g+FOSHlWjoK2Bnj99/bncrwp3GgqviPT9MhqwnuC3qBGzEuPIeptBL1SzZiXHkvU6wn6gBpv2rwRPEbQK/QwIXs4wz0Q9E41J6kpvZ+gF4xNxjOCG3sOU3qZoIki6BmtpvPcc5nS8wRNFEFPaD2d557TlJ4maKIImiiCHtHLujH33NaOcYImiqCJIugbva0bc2ewdnwkaKIImiiCJoqg3+h1f76yRy8TNFEETRRBE0XQRBE0UQT9V+93OK7c6ZgnaKIImiiCJoqgiSJoogiaKIImiqCJEv1Lg876wKHkBzD3eOaeRP7SoJ4+Obs9Sy8hpf5OxLiVo+eYp/6spd7Oc1RU0D29OHNn6emcw9DfeY6ICTrpRWkh5frFBA3DEBJ0ynRpLeE6RgTdo7m7B2l3Fnoi6IrGwhVzXZH3oXsi4HOZ0EQRNFEEXUCpuwMJdxlaE3QhR2MUcxmCLmhvlGIux12OwsTZlglNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRIkI+tf3r62PECHhOkYEDVcxQSdMl5ZSrl9M0MOQ86KcLem6RQU9DFkvzhnSrtflx5fPf1ofopZvP3+3PkK30kK+ig6axxO3cvDYBE0UQRNF0EQRNFEETZSn55fXS+tDQAnPL68XE5oogiaKoInyNAz/7x6tDwJHXBs2oYkiaKL8C9rawb16264JTRRBE+Vd0NYO7s1tsyY0UT4EbUpzL8ZaHZ3QoqZ3U41aOYgyGbQpTa/m2pyd0KKmN0tNWjmIshi0KU0v1rS4akKLmtbWNrh65RA1rWxpb9MOLWrOtrW5zW8KRc1Z9rS26y6HqKltb2O7b9uJmlqOtFUkSj9jmhJKDMkiH6yY1hxVqqHiIZrWbFF6GBb/6Nu0Zq0arVSNz7RmTM2hd9o0FfdjO+t/7ibrgbgfQ4v1s4t9V+AZenj/9B9gKmwilGY9BgAAAABJRU5ErkJggg==">
+<meta name="theme-color" content="#8A5A44">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Closet">
+<style>
+  :root{
+    --bg: #EFE9E1;
+    --panel: #FFFFFF;
+    --ink: #2B2420;
+    --ink-soft: #6B6058;
+    --line: #DCD3C7;
+    --accent: #8A5A44;
+    --accent-soft: #C9A98C;
+    --tag: #4E5D52;
+    --tag-bg: #E4E9E2;
+    --danger: #A64B3C;
+    --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-label: 'Courier New', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    padding-bottom: 96px;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 16px;}
+
+  header{
+    padding: 28px 0 18px;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 20;
+  }
+  header .eyebrow{
+    font-family: var(--font-label);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  h1{
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 32px;
+    margin: 4px 0 14px;
+    letter-spacing: 0.01em;
+  }
+
+  .header-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  }
+  .menu-btn{
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    width:38px; height:38px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    color: var(--ink); margin-top: 2px;
+  }
+  .menu-dropdown{
+    display:none;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    margin-top: 10px; overflow:hidden;
+  }
+  .menu-dropdown.open{ display:block; }
+  .menu-dropdown button{
+    width:100%; text-align:left; padding: 13px 16px; background:none; border:none;
+    font-size:14px; color: var(--ink); display:flex; align-items:center; gap:10px;
+    font-family: var(--font-body);
+  }
+  .menu-dropdown button:not(:last-of-type){ border-bottom: 1px solid var(--line); }
+  .menu-dropdown button svg{ color: var(--accent); flex-shrink:0; }
+
+  .search-row{
+    display:flex; gap:8px;
+  }
+  .search-box{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .search-box input{
+    border:none; outline:none; background:transparent;
+    font-size:15px; width:100%; color:var(--ink); font-family: var(--font-body);
+  }
+  .search-box svg{flex-shrink:0; opacity:0.5;}
+
+  .viewall-btn{
+    flex-shrink:0;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 0 14px; font-size: 13px; font-weight:600; color: var(--ink-soft);
+    font-family: var(--font-body);
+  }
+  .viewall-btn.active{
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+
+  .filters{
+    display:flex; flex-wrap:wrap; gap:8px; padding: 12px 0 4px;
+  }
+  select.filter-chip{
+    appearance:none; -webkit-appearance:none;
+    background: var(--tag-bg);
+    color: var(--tag);
+    border:none;
+    border-radius: 20px;
+    padding: 7px 26px 7px 14px;
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width: 100px;
+    flex-shrink:0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234E5D52' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+  }
+  select.filter-chip.active{
+    background-color: var(--accent);
+    color: white;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");
+  }
+  .clear-filters{
+    font-size:12px; color:var(--ink-soft); background:none; border:none;
+    text-decoration:underline; padding:7px 4px; flex-shrink:0; font-family:var(--font-body);
+  }
+
+  .count-row{
+    font-family: var(--font-label);
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    padding: 14px 0 6px;
+    text-transform: uppercase;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding-top: 6px;
+  }
+  .card{
+    background: var(--panel);
+    border-radius: 14px;
+    overflow:hidden;
+    border: 1px solid var(--line);
+    cursor:pointer;
+    transition: transform .12s ease;
+  }
+  .card:active{ transform: scale(0.97); }
+  .card .thumb{
+    width:100%; aspect-ratio: 1/1; object-fit: cover; display:block;
+    background: var(--tag-bg);
+  }
+  .card .meta{ padding: 10px 12px 12px; }
+  .card .name{
+    font-size: 14px; font-weight:600; margin:0 0 4px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .card .box-pill{
+    display:inline-block;
+    font-family: var(--font-label);
+    font-size: 11px;
+    background: var(--accent);
+    color:white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.03em;
+  }
+
+  .empty{
+    text-align:center; padding: 60px 20px; color: var(--ink-soft);
+  }
+  .empty svg{opacity:0.35; margin-bottom:12px;}
+  .empty p{font-family:var(--font-display); font-style:italic; font-size:18px; margin:0;}
+  .empty span{font-size:13px;}
+
+  .fab{
+    position:fixed; right:20px; bottom:24px;
+    width:60px; height:60px; border-radius:50%;
+    background: var(--accent); color:white; border:none;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 6px 18px rgba(138,90,68,0.4);
+    z-index: 30;
+  }
+  .fab:active{ transform: scale(0.94); }
+
+  /* Modal detalle */
+  .overlay{
+    position:fixed; inset:0; background:rgba(43,36,32,0.55);
+    z-index:50; display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; pointer-events:none; transition: opacity .2s ease;
+  }
+  .overlay.open{ opacity:1; pointer-events:all; }
+  .sheet{
+    background: var(--bg);
+    width:100%; max-width:640px;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    overflow-y:auto;
+    transform: translateY(100%);
+    transition: transform .25s ease;
+    padding-bottom: 24px;
+  }
+  .overlay.open .sheet{ transform: translateY(0); }
+  .sheet-handle{
+    width:36px; height:4px; background: var(--line); border-radius:4px;
+    margin: 10px auto 4px;
+  }
+  .sheet-photo{
+    width:100%; aspect-ratio: 4/3; object-fit:cover; background:var(--tag-bg);
+  }
+  .sheet-body{ padding: 18px 20px 4px; }
+  .sheet-body h2{
+    font-family: var(--font-display); font-style:italic; font-weight:400;
+    font-size: 24px; margin: 0 0 10px;
+  }
+  .sheet-locate{
+    background: var(--accent); color:white; border-radius:14px;
+    padding: 16px; text-align:center; margin-bottom:16px;
+  }
+  .sheet-locate .lbl{
+    font-family: var(--font-label); font-size:11px; letter-spacing:0.1em;
+    text-transform:uppercase; opacity:0.85;
+  }
+  .sheet-locate .box{ font-size: 28px; font-weight:700; margin-top:2px; }
+  .tags-row{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 18px; }
+  .tags-row .tag{
+    background: var(--tag-bg); color:var(--tag); font-size:12px; font-weight:600;
+    padding:5px 12px; border-radius:20px;
+  }
+  .sheet-actions{ display:flex; gap:10px; }
+  .sheet-actions button{
+    flex:1; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:600;
+    font-family: var(--font-body);
+  }
+  .btn-edit{ background: var(--tag-bg); color: var(--ink); }
+  .btn-delete{ background: transparent; color: var(--danger); border:1px solid var(--danger) !important; }
+  .btn-close-sheet{
+    display:block; margin: 14px auto 0; background:none; border:none; color:var(--ink-soft);
+    font-size:13px; text-decoration:underline;
+  }
+
+  /* Modal formulario */
+  .form-sheet .sheet-body{ padding: 14px 20px 8px; }
+  .field{ margin-bottom: 16px; }
+  .field label{
+    display:block; font-family: var(--font-label); font-size:11px; text-transform:uppercase;
+    letter-spacing:0.06em; color: var(--ink-soft); margin-bottom:6px;
+  }
+  .field input[type=text]{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+    background: var(--panel); font-size:15px; font-family: var(--font-body); color:var(--ink);
+  }
+  .field select{
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+    background: var(--panel); font-size:15px; font-family: var(--font-body); color:var(--ink);
+    appearance:none; -webkit-appearance:none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B6058' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat; background-position: right 14px center; background-size:14px;
+  }
+  .photo-picker{
+    display:flex; gap:10px; margin-bottom: 18px;
+  }
+  .photo-picker label{
+    flex:1; border: 1.5px dashed var(--accent-soft); border-radius: 12px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding: 18px 8px; color: var(--accent); font-size:12px; font-weight:600; gap:6px;
+    text-align:center; cursor:pointer;
+  }
+  .photo-picker input{ display:none; }
+  .preview-wrap{ position:relative; margin-bottom:18px; }
+  .preview-wrap img{ width:100%; border-radius:12px; aspect-ratio:4/3; object-fit:cover; }
+  .preview-wrap button{
+    position:absolute; top:8px; right:8px; background: rgba(43,36,32,0.7); color:white;
+    border:none; border-radius:50%; width:30px; height:30px; font-size:16px;
+  }
+  .save-btn{
+    width:100%; padding:14px; border-radius:12px; border:none;
+    background: var(--accent); color:white; font-size:15px; font-weight:700;
+    font-family: var(--font-body); margin-top:4px;
+  }
+  .save-btn:disabled{ background: var(--accent-soft); }
+</style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Calculadora de Sueldo Chile <span style="font-size:14px; font-weight:normal; color:#666;">CL</span></h2>
-  
-  <div id="indicadores">Cargando indicadores económicos...</div>
+<div class="wrap">
+  <header>
+    <div class="header-top">
+      <div>
+        <div class="eyebrow">Closet · guía de carteras</div>
+        <h1>¿Dónde está?</h1>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="Menú">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+      </button>
+    </div>
+    <div class="search-row">
+      <div class="search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="searchInput" type="text" placeholder="Buscar por nombre...">
+      </div>
+      <button class="viewall-btn" id="viewAllBtn">Ver todas</button>
+    </div>
+    <div class="filters" id="filtersRow"></div>
+  </header>
 
-  <div class="form-group">
-    <label for="modo">Modo de Cálculo:</label>
-    <select id="modo">
-      <option value="brutoALiquido">Calcular Líquido desde Bruto</option>
-      <option value="liquidoABruto">Calcular Bruto desde Líquido</option>
-    </select>
+  <div class="menu-dropdown" id="menuDropdown">
+    <button id="exportBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+      Exportar copia de seguridad
+    </button>
+    <button id="importBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15V3m0 0l-4 4m4-4l4 4M5 21h14"/></svg>
+      Importar copia de seguridad
+    </button>
+    <input type="file" id="importFileInput" style="display:none;">
   </div>
 
-  <!-- 1. SUELDO BASE -->
-  <div class="form-group">
-    <label id="lblMonto" for="monto">Sueldo Base ($ CLP):</label>
-    <input type="text" id="monto" inputmode="numeric" placeholder="Ej: 1.000.000">
-  </div>
+  <div class="count-row" id="countRow">0 carteras</div>
+  <div id="gridArea"></div>
+</div>
 
-  <!-- 2. BONOS IMPONIBLES -->
-  <div class="form-group">
-    <label for="bonosImponibles">Bonos Imponibles (Comisiones, Aguinaldos):</label>
-    <input type="text" id="bonosImponibles" inputmode="numeric" placeholder="0">
-  </div>
+<button class="fab" id="addBtn" aria-label="Agregar cartera">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+</button>
 
-  <!-- 3. GRATIFICACIÓN -->
-  <div class="form-group">
-    <label for="modoGratificacion">Gratificación Legal:</label>
-    <select id="modoGratificacion">
-      <option value="legal">Legal Tradicional (25% tope 4.75 IMM)</option>
-      <option value="personalizada">Porcentaje Personalizado</option>
-      <option value="sinGratificacion">Sin Gratificación ($0)</option>
-    </select>
-  </div>
-
-  <div class="form-group" id="groupGratificacionPersonalizada" style="display: none; background-color: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
-    <label for="porcentajeGratificacion">Porcentaje de Gratificación (%):</label>
-    <input type="number" id="porcentajeGratificacion" placeholder="Ej: 25" min="0" max="100" step="1" value="25">
-    
-    <div class="checkbox-group">
-      <input type="checkbox" id="conTopeGratificacion" checked>
-      <label for="conTopeGratificacion">Aplicar Tope Legal (4.75 IMM anual / 12)</label>
+<!-- Sheet: detalle -->
+<div class="overlay" id="detailOverlay">
+  <div class="sheet" id="detailSheet">
+    <div class="sheet-handle"></div>
+    <img class="sheet-photo" id="detailPhoto" src="" alt="">
+    <div class="sheet-body">
+      <h2 id="detailName"></h2>
+      <div class="sheet-locate">
+        <div class="lbl">Está en</div>
+        <div class="box" id="detailBox"></div>
+      </div>
+      <div class="tags-row" id="detailTags"></div>
+      <div class="sheet-actions">
+        <button class="btn-edit" id="editBtn">Editar</button>
+        <button class="btn-delete" id="deleteBtn">Eliminar</button>
+      </div>
+      <button class="btn-close-sheet" id="closeDetailBtn">Cerrar</button>
     </div>
   </div>
-
-  <!-- 4. BONOS NO IMPONIBLES -->
-  <div class="form-group">
-    <label for="bonosNoImponibles">Bonos No Imponibles (Colación / Movilización):</label>
-    <input type="text" id="bonosNoImponibles" inputmode="numeric" placeholder="0">
-  </div>
-
-  <!-- 5. APV -->
-  <div class="form-group">
-    <label for="regimenApv">Régimen APV:</label>
-    <select id="regimenApv">
-      <option value="ninguno">Sin APV</option>
-      <option value="A">Régimen A (Bonificación 15% Estado)</option>
-      <option value="B">Régimen B (Rebaja de Impuesto Único)</option>
-    </select>
-    <button type="button" onclick="abrirModalAPV()" style="background: none; color: #0066ff; border: none; padding: 4px 0; font-size: 13px; font-weight: normal; cursor: pointer; text-decoration: underline; text-align: left; margin-top: 4px;">💡 ¿Qué Régimen me conviene?</button>
-  </div>
-
-  <div class="form-group" id="groupMontoApv" style="display: none;">
-    <label for="montoApv">Monto APV Mensual ($ CLP):</label>
-    <input type="text" id="montoApv" inputmode="numeric" placeholder="0">
-  </div>
-
-  <!-- 6. AFP -->
-  <div class="form-group">
-    <label for="afp">AFP:</label>
-    <select id="afp">
-      <option value="habitat">AFP Habitat (11.27%)</option>
-      <option value="uno">AFP Uno (10.46%)</option>
-      <option value="modelo">AFP Modelo (10.58%)</option>
-      <option value="planvital">AFP PlanVital (11.16%)</option>
-      <option value="capital">AFP Capital (11.44%)</option>
-      <option value="cuprum">AFP Cuprum (11.44%)</option>
-      <option value="provida">AFP Provida (11.45%)</option>
-    </select>
-  </div>
-
-  <!-- 7. SALUD / ISAPRE -->
-  <div class="form-group">
-    <label for="tipoSalud">Sistema de Salud:</label>
-    <select id="tipoSalud">
-      <option value="7porciento">Fonasa / Isapre 7% Legal</option>
-      <option value="isapreUF">Isapre - Plan Total Pactado en UF</option>
-      <option value="isapreCLP">Isapre - Plan Total Pactado en $ CLP</option>
-      <option value="adicionalDirecto">Isapre - Digitar Adicional Directo ($ CLP)</option>
-    </select>
-  </div>
-
-  <div class="form-group" id="groupMontoIsapreUF" style="display: none;">
-    <label for="montoIsapreUF">Monto Plan Isapre Total (UF):</label>
-    <input type="number" id="montoIsapreUF" step="0.01" placeholder="Ej: 7.28">
-  </div>
-
-  <div class="form-group" id="groupMontoIsapreCLP" style="display: none;">
-    <label for="montoIsapreCLP">Monto Plan Isapre Total ($ CLP):</label>
-    <input type="text" id="montoIsapreCLP" inputmode="numeric" placeholder="Ej: 297.000">
-  </div>
-
-  <div class="form-group" id="groupAdicionalDirectoCLP" style="display: none;">
-    <label for="montoAdicionalCLP">Monto Adicional Isapre ($ CLP):</label>
-    <input type="text" id="montoAdicionalCLP" inputmode="numeric" placeholder="Ej: 39.987">
-  </div>
-
-  <!-- 8. CONTRATO Y CESANTÍA -->
-  <div class="form-group">
-    <label for="tipoContrato">Tipo de Contrato:</label>
-    <select id="tipoContrato">
-      <option value="indefinido">Indefinido</option>
-      <option value="plazoFijo">Plazo Fijo / Obra (Exento de Seguro)</option>
-    </select>
-  </div>
-
-  <div class="form-group" id="groupCondicionCesantia">
-    <label for="condicionCesantia">Condición Seguro de Cesantía:</label>
-    <select id="condicionCesantia">
-      <option value="normal">Menos de 11 años en la empresa (Cotiza 0.6%)</option>
-      <option value="mas11Anos">11 años o más en la empresa (Exento - 0.0%)</option>
-      <option value="pensionado">Pensionado Vejez / Invalidez Total (Exento - 0.0%)</option>
-    </select>
-  </div>
-
-  <button onclick="ejecutarCalculo()">Calcular</button>
-
-  <div id="resultado"></div>
 </div>
 
-<!-- MODAL RECOMENDADOR DE APV -->
-<div id="modalAPV" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000;">
-  <div style="background: #fff; padding: 24px; border-radius: 10px; max-width: 400px; width: 90%; position: relative;">
-    <h3 style="margin-top: 0; color: #1a1a1a;">Análisis de Conveniencia APV</h3>
-    <div id="contenidoModalAPV" style="font-size: 14px; color: #4a5568; line-height: 1.5; margin-bottom: 20px;"></div>
-    <button onclick="cerrarModalAPV()" style="background: #4a5568; margin-top: 0;">Cerrar</button>
+<!-- Sheet: formulario -->
+<div class="overlay" id="formOverlay">
+  <div class="sheet form-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-body">
+      <h2 id="formTitle">Nueva cartera</h2>
+
+      <div class="photo-picker" id="photoPicker">
+        <label>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Tomar foto
+          <input type="file" accept="image/*" capture="environment" id="cameraInput">
+        </label>
+        <label>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Desde galería
+          <input type="file" accept="image/*" id="galleryInput">
+        </label>
+      </div>
+      <div class="preview-wrap" id="previewWrap" style="display:none;">
+        <img id="previewImg" src="">
+        <button id="removePhotoBtn">✕</button>
+      </div>
+
+      <div class="field">
+        <label>Nombre (opcional)</label>
+        <input type="text" id="fieldName" placeholder="Ej: Cartera negra grande">
+      </div>
+
+      <div class="field">
+        <label>Caja</label>
+        <select id="fieldBox">
+          <option value="">Sin especificar</option>
+          <option>Caja 1</option>
+          <option>Caja 2</option>
+          <option>Caja 3</option>
+          <option>Caja 4</option>
+          <option>Caja 5</option>
+          <option>Caja 6</option>
+          <option>Caja 7</option>
+          <option>Caja 8</option>
+          <option>Caja 9</option>
+          <option>Caja 10</option>
+          <option value="__new__">+ Crear nueva caja</option>
+        </select>
+      </div>
+      <div class="field" id="newBoxField" style="display:none;">
+        <label>Nombre de la nueva caja</label>
+        <input type="text" id="fieldNewBox" placeholder="Ej: Caja 11, Caja closet piso 2...">
+      </div>
+
+      <div class="field">
+        <label>Color</label>
+        <select id="fieldColor">
+          <option value="">Sin especificar</option>
+          <option>Negro</option>
+          <option>Café</option>
+          <option>Beige</option>
+          <option>Blanco</option>
+          <option>Rojo</option>
+          <option>Azul</option>
+          <option>Verde</option>
+          <option>Dorado</option>
+          <option>Plateado</option>
+          <option>Rosado</option>
+          <option>Estampado</option>
+          <option value="__new__">+ Crear nuevo color</option>
+        </select>
+      </div>
+      <div class="field" id="newColorField" style="display:none;">
+        <label>Nombre del nuevo color</label>
+        <input type="text" id="fieldNewColor" placeholder="Ej: Vino tinto...">
+      </div>
+
+      <div class="field">
+        <label>Tamaño</label>
+        <select id="fieldSize">
+          <option value="">Sin especificar</option>
+          <option>Mini</option>
+          <option>Pequeña</option>
+          <option>Mediana</option>
+          <option>Grande</option>
+          <option value="__new__">+ Crear nuevo tamaño</option>
+        </select>
+      </div>
+      <div class="field" id="newSizeField" style="display:none;">
+        <label>Nombre del nuevo tamaño</label>
+        <input type="text" id="fieldNewSize" placeholder="Ej: Extra grande...">
+      </div>
+
+      <div class="field">
+        <label>Ocasión</label>
+        <select id="fieldOccasion">
+          <option value="">Sin especificar</option>
+          <option>Diario</option>
+          <option>Trabajo</option>
+          <option>Elegante / Fiesta</option>
+          <option>Viaje</option>
+          <option>Playa</option>
+          <option>Deportiva</option>
+          <option value="__new__">+ Crear nueva ocasión</option>
+        </select>
+      </div>
+      <div class="field" id="newOccasionField" style="display:none;">
+        <label>Nombre de la nueva ocasión</label>
+        <input type="text" id="fieldNewOccasion" placeholder="Ej: Cóctel, Casual elegante...">
+      </div>
+
+      <button class="save-btn" id="saveBtn" disabled>Guardar cartera</button>
+      <button class="btn-close-sheet" id="closeFormBtn">Cancelar</button>
+    </div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// VALORES DE RESPALDO
-let INDICADORES = {
-  uf: 40844.79,
-  utm: 71649,
-  imm: 553553
-};
-
-const AFPS = {
-  uno: { nombre: 'AFP Uno', tasa: 0.1046 },
-  modelo: { nombre: 'AFP Modelo', tasa: 0.1058 },
-  planvital: { nombre: 'AFP PlanVital', tasa: 0.1116 },
-  habitat: { nombre: 'AFP Habitat', tasa: 0.1127 },
-  capital: { nombre: 'AFP Capital', tasa: 0.1144 },
-  cuprum: { nombre: 'AFP Cuprum', tasa: 0.1144 },
-  provida: { nombre: 'AFP Provida', tasa: 0.1145 }
-};
-
-const TRAMOS_IMPUESTO = [
-  { desde: 0, hasta: 13.5, factor: 0, rebaja: 0 },
-  { desde: 13.5, hasta: 30, factor: 0.04, rebaja: 0.54 },
-  { desde: 30, hasta: 50, factor: 0.08, rebaja: 1.74 },
-  { desde: 50, hasta: 70, factor: 0.135, rebaja: 4.49 },
-  { desde: 70, hasta: 90, factor: 0.23, rebaja: 11.14 },
-  { desde: 90, hasta: 120, factor: 0.304, rebaja: 17.8 },
-  { desde: 120, hasta: 310, factor: 0.35, rebaja: 23.32 },
-  { desde: 310, hasta: Infinity, factor: 0.40, rebaja: 38.82 }
-];
-
-function formatearNumero(valor) {
-  const soloNumeros = valor.replace(/\D/g, '');
-  if (!soloNumeros) return '';
-  return parseInt(soloNumeros, 10).toLocaleString('es-CL');
+(function(){
+const SUPABASE_URL = 'https://vunzglostcikazoybhma.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_tkfiLjI5i1OZo-lTUoSrxw_HszY7r7Z';
+let supabase = null;
+try{
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch(err){
+  console.error('No se pudo inicializar Supabase', err);
 }
+const TABLE = 'carteras_items';
+const BUCKET = 'carteras-fotos';
 
-function obtenerValorNumerico(id) {
-  const elem = document.getElementById(id);
-  if (!elem) return 0;
-  const soloNumeros = elem.value.replace(/\D/g, '');
-  return parseFloat(soloNumeros) || 0;
-}
+const DB_NAME = 'carterasDB';
+const DB_STORE = 'items';
+const LEGACY_KEY = 'carteras_v1';
+let items = [];
+let db = null;
+let editingId = null;
+let currentPhotoData = null;   // dataURL nueva foto tomada (aún no subida)
+let currentPhotoUrl = null;    // url ya existente (al editar sin cambiar foto)
+let currentDetailId = null;
 
-function aplicarFormatoEnVivo(id) {
-  const elem = document.getElementById(id);
-  if (!elem) return;
-  elem.type = 'text';
-  elem.addEventListener('input', (e) => {
-    e.target.value = formatearNumero(e.target.value);
+const state = { search: '', color: '', size: '', occasion: '', box: '', showAll: false };
+
+function openDB(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const database = req.result;
+      if(!database.objectStoreNames.contains(DB_STORE)){
+        database.createObjectStore(DB_STORE, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
   });
 }
 
-async function cargarIndicadores() {
-  const elemIndicadores = document.getElementById('indicadores');
-  try {
-    const res = await fetch('https://mindicador.cl/api');
-    if (res.ok) {
-      const data = await res.json();
-      if (data.uf && data.uf.valor) INDICADORES.uf = data.uf.valor;
-      if (data.utm && data.utm.valor) INDICADORES.utm = data.utm.valor;
+function dbGetAll(){
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const store = tx.objectStore(DB_STORE);
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function cacheAll(list){
+  return new Promise((resolve, reject) => {
+    try{
+      const tx = db.transaction(DB_STORE, 'readwrite');
+      const store = tx.objectStore(DB_STORE);
+      store.clear();
+      list.forEach(it => store.put(it));
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error);
+    } catch(err){ reject(err); }
+  });
+}
+
+async function migrateFromLocalStorageIfNeeded(){
+  const legacy = localStorage.getItem(LEGACY_KEY);
+  if(!legacy) return;
+  try{
+    const legacyItems = JSON.parse(legacy);
+    if(Array.isArray(legacyItems) && legacyItems.length > 0){
+      for(const it of legacyItems){
+        // las fotos antiguas venían como dataURL; hay que subirlas a Storage
+        let photoUrl = it.photo;
+        if(photoUrl && photoUrl.startsWith('data:')){
+          photoUrl = await uploadPhotoDataUrl(it.id, photoUrl);
+        }
+        await supabase.from(TABLE).upsert({
+          id: it.id, name: it.name || '', box: it.box || '',
+          color: it.color || '', size: it.size || '', occasion: it.occasion || '',
+          photo_url: photoUrl || null,
+        });
+      }
     }
-  } catch (error) {
-    console.warn('Uso de valores de respaldo por error de red', error);
+    localStorage.removeItem(LEGACY_KEY);
+  } catch(err){
+    console.error('Error migrando datos antiguos a Supabase', err);
+  }
+}
+
+function rowToItem(row){
+  return {
+    id: row.id, name: row.name || '', box: row.box || '',
+    color: row.color || '', size: row.size || '', occasion: row.occasion || '',
+    photo: row.photo_url || '',
+  };
+}
+
+async function fetchFromSupabase(){
+  const { data, error } = await supabase.from(TABLE).select('*').order('created_at', { ascending: true });
+  if(error) throw error;
+  return data.map(rowToItem);
+}
+
+async function uploadPhotoDataUrl(id, dataUrl){
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  const path = `${id}.jpg`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, blob, {
+    contentType: 'image/jpeg', upsert: true,
+  });
+  if(error) throw error;
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function initApp(){
+  db = await openDB();
+  if(!supabase){
+    console.error('Supabase no disponible, usando solo copia local');
+    items = await dbGetAll();
+    renderFilters();
+    renderGrid();
+    alert('No se pudo conectar a internet para sincronizar. Se está mostrando la copia guardada en este celular. Revisa tu conexión y vuelve a abrir la app.');
+    return;
+  }
+  await migrateFromLocalStorageIfNeeded();
+  try{
+    items = await fetchFromSupabase();
+    await cacheAll(items);
+  } catch(err){
+    console.error('Sin conexión, usando copia local', err);
+    items = await dbGetAll();
+  }
+  renderFilters();
+  renderGrid();
+}
+
+function uid(){ return 'c' + Date.now() + Math.random().toString(36).slice(2,7); }
+
+function uniqueValues(key){
+  return [...new Set(items.map(i => i[key]).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'es', { numeric: true, sensitivity: 'base' }));
+}
+
+function renderFilters(){
+  const row = document.getElementById('filtersRow');
+  row.innerHTML = '';
+
+  const defs = [
+    { key:'box', label:'Caja', values: uniqueValues('box') },
+    { key:'color', label:'Color', values: uniqueValues('color') },
+    { key:'size', label:'Tamaño', values: uniqueValues('size') },
+    { key:'occasion', label:'Ocasión', values: uniqueValues('occasion') },
+  ];
+
+  defs.forEach(def => {
+    if(def.values.length === 0) return;
+    const sel = document.createElement('select');
+    sel.className = 'filter-chip' + (state[def.key] ? ' active' : '');
+    sel.innerHTML = `<option value="">${def.label}</option>` +
+      def.values.map(v => `<option value="${v}" ${state[def.key]===v?'selected':''}>${v}</option>`).join('');
+    sel.addEventListener('change', e => {
+      state[def.key] = e.target.value;
+      renderFilters();
+      renderGrid();
+      updateViewAllBtn();
+    });
+    row.appendChild(sel);
+  });
+
+  const anyActive = hasActiveFilter();
+  if(anyActive){
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'clear-filters';
+    clearBtn.textContent = 'Limpiar filtros';
+    clearBtn.onclick = () => {
+      state.search=''; state.color=''; state.size=''; state.occasion=''; state.box='';
+      document.getElementById('searchInput').value = '';
+      renderFilters(); renderGrid(); updateViewAllBtn();
+    };
+    row.appendChild(clearBtn);
+  }
+}
+
+function filteredItems(){
+  return items.filter(i => {
+    if(state.search && !(i.name||'').toLowerCase().includes(state.search.toLowerCase())) return false;
+    if(state.color && i.color !== state.color) return false;
+    if(state.size && i.size !== state.size) return false;
+    if(state.occasion && i.occasion !== state.occasion) return false;
+    if(state.box && i.box !== state.box) return false;
+    return true;
+  });
+}
+
+function hasActiveFilter(){
+  return !!(state.search || state.color || state.size || state.occasion || state.box);
+}
+
+function renderGrid(){
+  const list = filteredItems();
+  const area = document.getElementById('gridArea');
+  const countRow = document.getElementById('countRow');
+
+  if(items.length === 0){
+    countRow.textContent = '0 carteras';
+    area.innerHTML = `
+      <div class="empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7l1.5-3h15L21 7M3 7v12a1 1 0 001 1h16a1 1 0 001-1V7M3 7h18M9 11a3 3 0 006 0"/></svg>
+        <p>Aún no hay carteras</p>
+        <span>Toca el botón + para agregar la primera</span>
+      </div>`;
+    return;
+  }
+
+  if(!hasActiveFilter() && !state.showAll){
+    countRow.textContent = `${items.length} ${items.length === 1 ? 'cartera guardada' : 'carteras guardadas'}`;
+    area.innerHTML = `
+      <div class="empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <p>Busca o filtra tu cartera</p>
+        <span>O toca "Ver todas" para ver el catálogo completo</span>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('countRow').textContent =
+    list.length + (list.length === 1 ? ' cartera' : ' carteras');
+
+  if(list.length === 0){
+    area.innerHTML = `
+      <div class="empty">
+        <p>Sin resultados</p>
+        <span>Prueba con otro filtro o búsqueda</span>
+      </div>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  list.slice().reverse().forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <img class="thumb" src="${item.photo}" alt="${item.name||'cartera'}">
+      <div class="meta">
+        <p class="name">${item.name || 'Sin nombre'}</p>
+        <span class="box-pill">${item.box || 'Sin caja'}</span>
+      </div>`;
+    card.onclick = () => openDetail(item.id);
+    grid.appendChild(card);
+  });
+  area.innerHTML = '';
+  area.appendChild(grid);
+}
+
+// Detalle
+function openDetail(id){
+  const item = items.find(i => i.id === id);
+  if(!item) return;
+  currentDetailId = id;
+  document.getElementById('detailPhoto').src = item.photo;
+  document.getElementById('detailName').textContent = item.name || 'Sin nombre';
+  document.getElementById('detailBox').textContent = item.box || 'Sin caja asignada';
+  const tagsRow = document.getElementById('detailTags');
+  tagsRow.innerHTML = '';
+  [item.color, item.size, item.occasion].filter(Boolean).forEach(t => {
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = t;
+    tagsRow.appendChild(tag);
+  });
+  document.getElementById('detailOverlay').classList.add('open');
+}
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('open');
+  currentDetailId = null;
+}
+
+document.getElementById('closeDetailBtn').onclick = closeDetail;
+document.getElementById('detailOverlay').addEventListener('click', e => {
+  if(e.target.id === 'detailOverlay') closeDetail();
+});
+document.getElementById('deleteBtn').onclick = async () => {
+  if(!currentDetailId) return;
+  if(!supabase){
+    alert('No hay conexión a internet. Vuelve a intentarlo cuando tengas señal o wifi.');
+    return;
+  }
+  if(confirm('¿Eliminar esta cartera del registro?')){
+    const idToDelete = currentDetailId;
+    try{
+      const { error } = await supabase.from(TABLE).delete().eq('id', idToDelete);
+      if(error) throw error;
+      await supabase.storage.from(BUCKET).remove([`${idToDelete}.jpg`]);
+      items = items.filter(i => i.id !== idToDelete);
+      await cacheAll(items);
+      closeDetail();
+      renderFilters();
+      renderGrid();
+    } catch(err){
+      console.error('Error eliminando', err);
+      alert('No se pudo eliminar. Revisa tu conexión a internet e intenta de nuevo.');
+    }
+  }
+};
+document.getElementById('editBtn').onclick = () => {
+  const item = items.find(i => i.id === currentDetailId);
+  if(!item) return;
+  closeDetail();
+  openForm(item);
+};
+
+// Formulario
+const PREDEFINED = {
+  box: ['Caja 1','Caja 2','Caja 3','Caja 4','Caja 5','Caja 6','Caja 7','Caja 8','Caja 9','Caja 10'],
+  color: ['Negro','Café','Beige','Blanco','Rojo','Azul','Verde','Dorado','Plateado','Rosado','Estampado'],
+  size: ['Mini','Pequeña','Mediana','Grande'],
+  occasion: ['Diario','Trabajo','Elegante / Fiesta','Viaje','Playa','Deportiva'],
+};
+const FIELD_LABELS = { box: '+ Crear nueva caja', color: '+ Crear nuevo color', size: '+ Crear nuevo tamaño', occasion: '+ Crear nueva ocasión' };
+
+function populateSelectOptions(key, selectId){
+  const sel = document.getElementById(selectId);
+  const predefined = PREDEFINED[key];
+  const norm = v => v.trim().toLowerCase();
+  const predefinedNorm = predefined.map(norm);
+  const custom = uniqueValues(key).filter(v => !predefinedNorm.includes(norm(v)));
+  sel.innerHTML = '<option value="">Sin especificar</option>' +
+    predefined.map(v => `<option>${v}</option>`).join('') +
+    (custom.length ? custom.map(v => `<option>${v}</option>`).join('') : '') +
+    `<option value="__new__">${FIELD_LABELS[key]}</option>`;
+}
+
+function setSelectValue(key, selectId, newFieldId, newInputId, item){
+  const sel = document.getElementById(selectId);
+  const newField = document.getElementById(newFieldId);
+  const newInput = document.getElementById(newInputId);
+  newInput.value = '';
+  const val = item ? (item[key]||'') : '';
+  if(val && ![...sel.options].some(o => o.value === val)){
+    sel.value = '__new__';
+    newInput.value = val;
+    newField.style.display = 'block';
+  } else {
+    sel.value = val;
+    newField.style.display = 'none';
+  }
+}
+
+function openForm(item){
+  editingId = item ? item.id : null;
+  currentPhotoData = null;
+  currentPhotoUrl = item ? item.photo : null;
+  document.getElementById('formTitle').textContent = item ? 'Editar cartera' : 'Nueva cartera';
+  document.getElementById('fieldName').value = item ? (item.name||'') : '';
+
+  populateSelectOptions('box', 'fieldBox');
+  setSelectValue('box', 'fieldBox', 'newBoxField', 'fieldNewBox', item);
+
+  populateSelectOptions('color', 'fieldColor');
+  setSelectValue('color', 'fieldColor', 'newColorField', 'fieldNewColor', item);
+
+  populateSelectOptions('size', 'fieldSize');
+  setSelectValue('size', 'fieldSize', 'newSizeField', 'fieldNewSize', item);
+
+  populateSelectOptions('occasion', 'fieldOccasion');
+  setSelectValue('occasion', 'fieldOccasion', 'newOccasionField', 'fieldNewOccasion', item);
+
+  updatePreview();
+  updateSaveState();
+  document.getElementById('formOverlay').classList.add('open');
+}
+function closeForm(){
+  document.getElementById('formOverlay').classList.remove('open');
+  document.getElementById('cameraInput').value = '';
+  document.getElementById('galleryInput').value = '';
+  editingId = null;
+  currentPhotoData = null;
+}
+
+function updatePreview(){
+  const wrap = document.getElementById('previewWrap');
+  const picker = document.getElementById('photoPicker');
+  const shown = currentPhotoData || currentPhotoUrl;
+  if(shown){
+    document.getElementById('previewImg').src = shown;
+    wrap.style.display = 'block';
+    picker.style.display = 'none';
+  } else {
+    wrap.style.display = 'none';
+    picker.style.display = 'flex';
+  }
+}
+
+function updateSaveState(){
+  document.getElementById('saveBtn').disabled = !(currentPhotoData || currentPhotoUrl);
+}
+
+function handleFile(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    resizeImage(e.target.result, dataUrl => {
+      currentPhotoData = dataUrl;
+      updatePreview();
+      updateSaveState();
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+function resizeImage(dataUrl, callback){
+  const img = new Image();
+  img.onload = () => {
+    const maxDim = 640;
+    let { width, height } = img;
+    if(width > height && width > maxDim){
+      height = Math.round(height * (maxDim/width)); width = maxDim;
+    } else if(height > maxDim){
+      width = Math.round(width * (maxDim/height)); height = maxDim;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = height;
+    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+    callback(canvas.toDataURL('image/jpeg', 0.7));
+  };
+  img.src = dataUrl;
+}
+
+document.getElementById('cameraInput').addEventListener('change', e => handleFile(e.target.files[0]));
+document.getElementById('galleryInput').addEventListener('change', e => handleFile(e.target.files[0]));
+document.getElementById('removePhotoBtn').onclick = () => {
+  currentPhotoData = null;
+  currentPhotoUrl = null;
+  updatePreview();
+  updateSaveState();
+};
+
+function wireNewFieldToggle(selectId, newFieldId){
+  document.getElementById(selectId).addEventListener('change', e => {
+    document.getElementById(newFieldId).style.display = (e.target.value === '__new__') ? 'block' : 'none';
+  });
+}
+wireNewFieldToggle('fieldBox', 'newBoxField');
+wireNewFieldToggle('fieldColor', 'newColorField');
+wireNewFieldToggle('fieldSize', 'newSizeField');
+wireNewFieldToggle('fieldOccasion', 'newOccasionField');
+
+document.getElementById('addBtn').onclick = () => openForm(null);
+document.getElementById('closeFormBtn').onclick = closeForm;
+document.getElementById('formOverlay').addEventListener('click', e => {
+  if(e.target.id === 'formOverlay') closeForm();
+});
+
+document.getElementById('saveBtn').onclick = async () => {
+  if(!currentPhotoData && !currentPhotoUrl) return;
+  if(!supabase){
+    alert('No hay conexión a internet. No se pudo guardar — vuelve a intentarlo cuando tengas señal o wifi.');
+    return;
+  }
+  function resolveValue(selectId, newInputId){
+    const v = document.getElementById(selectId).value;
+    return v === '__new__' ? document.getElementById(newInputId).value.trim() : v;
+  }
+  const id = editingId || uid();
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.disabled = true;
+  try{
+    let photoUrl = currentPhotoUrl;
+    if(currentPhotoData){
+      photoUrl = await uploadPhotoDataUrl(id, currentPhotoData);
+    }
+    const record = {
+      id,
+      name: document.getElementById('fieldName').value.trim(),
+      box: resolveValue('fieldBox', 'fieldNewBox'),
+      color: resolveValue('fieldColor', 'fieldNewColor'),
+      size: resolveValue('fieldSize', 'fieldNewSize'),
+      occasion: resolveValue('fieldOccasion', 'fieldNewOccasion'),
+      photo_url: photoUrl,
+    };
+    const { error } = await supabase.from(TABLE).upsert(record);
+    if(error) throw error;
+
+    const data = { id, name: record.name, box: record.box, color: record.color, size: record.size, occasion: record.occasion, photo: photoUrl };
+    if(editingId){
+      const idx = items.findIndex(i => i.id === editingId);
+      items = items.slice();
+      items[idx] = data;
+    } else {
+      items = items.concat([data]);
+    }
+    await cacheAll(items);
+    closeForm();
+    renderFilters();
+    renderGrid();
+  } catch(err){
+    console.error('Error guardando', err);
+    alert('No se pudo guardar. Revisa tu conexión a internet e intenta de nuevo.');
   } finally {
-    if (elemIndicadores) {
-      elemIndicadores.innerText = `Valores oficiales vigentes: UF $${Math.round(INDICADORES.uf).toLocaleString('es-CL')} | UTM $${INDICADORES.utm.toLocaleString('es-CL')}`;
-    }
+    saveBtn.disabled = false;
   }
-}
+};
 
-function calcularImpuesto(baseTributable, utm) {
-  const baseUTM = baseTributable / utm;
-  const tramo = TRAMOS_IMPUESTO.find(t => baseUTM > t.desde && baseUTM <= t.hasta);
-  if (!tramo || tramo.factor === 0) return 0;
-  return Math.max(0, Math.round((baseTributable * tramo.factor) - (tramo.rebaja * utm)));
-}
-
-function calcularLiquido(sueldoBase, afpKey, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv, configSalud) {
-  const afp = AFPS[afpKey] || AFPS.habitat;
-  
-  const baseGratificable = sueldoBase + bonosImp;
-  let gratificacion = 0;
-  const topeGratMensual = Math.round((4.75 * INDICADORES.imm) / 12);
-
-  if (configGrat.modo === 'legal') {
-    gratificacion = Math.min(Math.round(baseGratificable * 0.25), topeGratMensual);
-  } else if (configGrat.modo === 'personalizada') {
-    const porcentajeDecimal = (configGrat.porcentaje || 0) / 100;
-    const montoCalculado = Math.round(baseGratificable * porcentajeDecimal);
-    gratificacion = configGrat.conTope ? Math.min(montoCalculado, topeGratMensual) : montoCalculado;
-  } else {
-    gratificacion = 0;
-  }
-
-  const totalImponible = sueldoBase + gratificacion + bonosImp;
-
-  const topePrevisionalCLP = 90.0 * INDICADORES.uf;
-  const topeCesantiaCLP = 135.2 * INDICADORES.uf;
-
-  const imponiblePrevisional = Math.min(totalImponible, topePrevisionalCLP);
-  const imponibleCesantia = Math.min(totalImponible, topeCesantiaCLP);
-
-  const afpMonto = Math.round(imponiblePrevisional * afp.tasa);
-  
-  // 1. SALUD 7% OBLIGATORIO (DEDUCIBLE DE IMPUESTOS)
-  const salud7porciento = Math.round(imponiblePrevisional * 0.07);
-
-  // 2. CÁLCULO DE ADICIONAL ISAPRE (AFECTO / NO DEDUCIBLE TRIBUTARIAMENTE)
-  let adicionalIsapre = 0;
-  if (configSalud.tipo === 'isapreUF') {
-    const planTotalCLP = Math.round((configSalud.valorUF || 0) * INDICADORES.uf);
-    adicionalIsapre = Math.max(0, planTotalCLP - salud7porciento);
-  } else if (configSalud.tipo === 'isapreCLP') {
-    const planTotalCLP = configSalud.valorCLP || 0;
-    adicionalIsapre = Math.max(0, planTotalCLP - salud7porciento);
-  } else if (configSalud.tipo === 'adicionalDirecto') {
-    adicionalIsapre = configSalud.valorAdicionalCLP || 0;
-  }
-
-  let tasaCesantia = 0.0;
-  if (tipoContrato === 'indefinido' && condicionCesantia === 'normal') {
-    tasaCesantia = 0.006;
-  }
-  const cesantiaMonto = Math.round(imponibleCesantia * tasaCesantia);
-  
-  // SOLAMENTE EL 7% LEGAL REBAJA LA BASE TRIBUTABLE
-  const totalPrevisionalDeducible = afpMonto + salud7porciento + cesantiaMonto;
-
-  const baseTributableSinApv = Math.max(0, totalImponible - totalPrevisionalDeducible);
-  const impuestoSinApv = calcularImpuesto(baseTributableSinApv, INDICADORES.utm);
-
-  const topeApvB = 50 * INDICADORES.uf;
-  const apvRebajable = (regimenApv === 'B') ? Math.min(montoApv, topeApvB) : 0;
-
-  const baseTributableConApv = Math.max(0, totalImponible - totalPrevisionalDeducible - apvRebajable);
-  const impuesto = calcularImpuesto(baseTributableConApv, INDICADORES.utm);
-
-  const ahorroTributario = Math.max(0, impuestoSinApv - impuesto);
-  const apvTotalDescuento = (regimenApv !== 'ninguno') ? montoApv : 0;
-
-  // LÍQUIDO FINAL
-  const liquido = totalImponible - totalPrevisionalDeducible - adicionalIsapre - impuesto - apvTotalDescuento + bonosNoImp;
-
-  return { 
-    sueldoBase, gratificacion, bonosImp, totalImponible, 
-    afpMonto, saludMonto: salud7porciento, adicionalIsapre,
-    cesantiaMonto, apvMonto: apvTotalDescuento, 
-    regimenApv, impuesto, ahorroTributario, bonosNoImp, liquido 
-  };
-}
-
-function calcularBrutoDesdeLiquido(liquidoDeseado, afpKey, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv, configSalud) {
-  let min = 0, max = liquidoDeseado * 3, res = null;
-  while (min <= max) {
-    let mid = Math.floor((min + max) / 2);
-    res = calcularLiquido(mid, afpKey, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv, configSalud);
-    let diff = res.liquido - liquidoDeseado;
-    if (Math.abs(diff) <= 1) break;
-    if (diff < 0) min = mid + 1;
-    else max = mid - 1;
-  }
-  return res;
-}
-
-function ejecutarCalculo() {
-  const modo = document.getElementById('modo').value;
-  const monto = obtenerValorNumerico('monto');
-  const afp = document.getElementById('afp').value;
-  const bonosImp = obtenerValorNumerico('bonosImponibles');
-  const bonosNoImp = obtenerValorNumerico('bonosNoImponibles');
-  
-  const modoGratificacion = document.getElementById('modoGratificacion').value;
-  const porcentajeGratificacion = parseFloat(document.getElementById('porcentajeGratificacion').value) || 0;
-  const conTopeGratificacion = document.getElementById('conTopeGratificacion').checked;
-
-  const configGrat = {
-    modo: modoGratificacion,
-    porcentaje: porcentajeGratificacion,
-    conTope: conTopeGratificacion
-  };
-
-  const tipoSalud = document.getElementById('tipoSalud').value;
-  const valorIsapreUF = parseFloat(document.getElementById('montoIsapreUF').value) || 0;
-  const valorIsapreCLP = obtenerValorNumerico('montoIsapreCLP');
-  const valorAdicionalCLP = obtenerValorNumerico('montoAdicionalCLP');
-
-  const configSalud = {
-    tipo: tipoSalud,
-    valorUF: valorIsapreUF,
-    valorCLP: valorIsapreCLP,
-    valorAdicionalCLP: valorAdicionalCLP
-  };
-
-  const tipoContrato = document.getElementById('tipoContrato').value;
-  const condicionCesantia = document.getElementById('condicionCesantia').value;
-  const regimenApv = document.getElementById('regimenApv').value;
-  const montoApv = obtenerValorNumerico('montoApv');
-
-  let res = (modo === 'brutoALiquido') 
-    ? calcularLiquido(monto, afp, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv, configSalud)
-    : calcularBrutoDesdeLiquido(monto, afp, bonosImp, bonosNoImp, configGrat, tipoContrato, condicionCesantia, regimenApv, montoApv, configSalud);
-
-  const box = document.getElementById('resultado');
-  box.style.display = 'block';
-
-  let bloqueAhorroApv = '';
-  if (res.regimenApv === 'B' && res.apvMonto > 0) {
-    if (res.ahorroTributario > 0) {
-      bloqueAhorroApv = `<div class="ahorro-badge">💡 <strong>Ahorro Tributario:</strong> Reduces tu Impuesto Único en <strong>$${res.ahorroTributario.toLocaleString('es-CL')}</strong> gracias a tu APV Régimen B.</div>`;
-    } else {
-      bloqueAhorroApv = `<div class="ahorro-badge" style="background-color: #fef3c7; color: #92400e; border-left-color: #f59e0b;">ℹ️ Tu renta actual está en el tramo exento de impuesto, por lo que el Régimen B no genera ahorro tributario directo.</div>`;
-    }
-  }
-
-  box.innerHTML = `
-    <h3>Resultado del Cálculo</h3>
-    <div class="row"><span>Sueldo Base Requerido:</span> <strong>$${res.sueldoBase.toLocaleString('es-CL')}</strong></div>
-    <div class="row"><span>Bonos Imponibles:</span> <strong>$${res.bonosImp.toLocaleString('es-CL')}</strong></div>
-    <div class="row"><span>Gratificación Legal:</span> <strong>$${res.gratificacion.toLocaleString('es-CL')}</strong></div>
-    <div class="row"><span>Total Imponible:</span> <strong>$${res.totalImponible.toLocaleString('es-CL')}</strong></div>
-    <hr style="border: 0; border-top: 1px solid #c6f6d5; margin: 8px 0;">
-    <div class="row"><span>Descuento AFP:</span> <span>-$${res.afpMonto.toLocaleString('es-CL')}</span></div>
-    <div class="row"><span>Descuento Salud (7% Legal):</span> <span>-$${res.saludMonto.toLocaleString('es-CL')}</span></div>
-    ${res.adicionalIsapre > 0 ? `<div class="row"><span>Isapre Adicional (sobre 7%):</span> <span>-$${res.adicionalIsapre.toLocaleString('es-CL')}</span></div>` : ''}
-    <div class="row"><span>Seguro Cesantía:</span> <span>-$${res.cesantiaMonto.toLocaleString('es-CL')}</span></div>
-    ${res.apvMonto > 0 ? `<div class="row"><span>Ahorro APV (Régimen ${res.regimenApv}):</span> <span>-$${res.apvMonto.toLocaleString('es-CL')}</span></div>` : ''}
-    <div class="row"><span>Impuesto Único:</span> <span>-$${res.impuesto.toLocaleString('es-CL')}</span></div>
-    ${bloqueAhorroApv}
-    <div class="row"><span>Bonos No Imponibles:</span> <span>+$${res.bonosNoImp.toLocaleString('es-CL')}</span></div>
-    <div class="row total"><span>Sueldo Líquido Final:</span> <span>$${res.liquido.toLocaleString('es-CL')}</span></div>
-  `;
-}
-
-function actualizarDinamicos() {
-  const modoGrat = document.getElementById('modoGratificacion').value;
-  document.getElementById('groupGratificacionPersonalizada').style.display = (modoGrat === 'personalizada') ? 'block' : 'none';
-
-  const regApv = document.getElementById('regimenApv').value;
-  document.getElementById('groupMontoApv').style.display = (regApv === 'ninguno') ? 'none' : 'block';
-
-  const tSalud = document.getElementById('tipoSalud').value;
-  document.getElementById('groupMontoIsapreUF').style.display = (tSalud === 'isapreUF') ? 'block' : 'none';
-  document.getElementById('groupMontoIsapreCLP').style.display = (tSalud === 'isapreCLP') ? 'block' : 'none';
-  document.getElementById('groupAdicionalDirectoCLP').style.display = (tSalud === 'adicionalDirecto') ? 'block' : 'none';
-
-  const tContrato = document.getElementById('tipoContrato').value;
-  document.getElementById('groupCondicionCesantia').style.display = (tContrato === 'plazoFijo') ? 'none' : 'block';
-
-  const modoCalc = document.getElementById('modo').value;
-  document.getElementById('lblMonto').innerText = (modoCalc === 'brutoALiquido') ? 'Sueldo Base ($ CLP):' : 'Sueldo Líquido Deseado ($ CLP):';
-}
-
-['modoGratificacion', 'regimenApv', 'tipoSalud', 'tipoContrato', 'modo'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('change', actualizarDinamicos);
+document.getElementById('searchInput').addEventListener('input', e => {
+  state.search = e.target.value;
+  renderGrid();
+  updateViewAllBtn();
 });
 
-aplicarFormatoEnVivo('monto');
-aplicarFormatoEnVivo('bonosImponibles');
-aplicarFormatoEnVivo('bonosNoImponibles');
-aplicarFormatoEnVivo('montoApv');
-aplicarFormatoEnVivo('montoIsapreCLP');
-aplicarFormatoEnVivo('montoAdicionalCLP');
+function updateViewAllBtn(){
+  document.getElementById('viewAllBtn').classList.toggle('active', state.showAll);
+}
 
-window.addEventListener('DOMContentLoaded', () => {
-  actualizarDinamicos();
-  cargarIndicadores();
+document.getElementById('viewAllBtn').onclick = () => {
+  state.showAll = !state.showAll;
+  if(state.showAll){
+    state.search=''; state.color=''; state.size=''; state.occasion=''; state.box='';
+    document.getElementById('searchInput').value = '';
+  }
+  updateViewAllBtn();
+  renderFilters();
+  renderGrid();
+};
+
+
+// Menú, exportar e importar
+document.getElementById('menuBtn').onclick = () => {
+  document.getElementById('menuDropdown').classList.toggle('open');
+};
+
+document.getElementById('exportBtn').onclick = () => {
+  const payload = {
+    app: 'carteras',
+    exportedAt: new Date().toISOString(),
+    items: items,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fecha = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `copia-carteras-${fecha}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  document.getElementById('menuDropdown').classList.remove('open');
+};
+
+document.getElementById('importBtn').onclick = () => {
+  document.getElementById('importFileInput').click();
+};
+
+document.getElementById('importFileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async evt => {
+    try{
+      const parsed = JSON.parse(evt.target.result);
+      const incoming = Array.isArray(parsed) ? parsed : parsed.items;
+      if(!Array.isArray(incoming)) throw new Error('formato inválido');
+
+      const existingIds = new Set(items.map(i => i.id));
+      let added = 0, skipped = 0;
+      for(const inc of incoming){
+        if(inc && inc.id && !existingIds.has(inc.id)){
+          let photoUrl = inc.photo;
+          if(photoUrl && photoUrl.startsWith('data:')){
+            photoUrl = await uploadPhotoDataUrl(inc.id, photoUrl);
+          }
+          const record = {
+            id: inc.id, name: inc.name || '', box: inc.box || '',
+            color: inc.color || '', size: inc.size || '', occasion: inc.occasion || '',
+            photo_url: photoUrl || null,
+          };
+          const { error } = await supabase.from(TABLE).upsert(record);
+          if(error) throw error;
+          items.push({ id: inc.id, name: record.name, box: record.box, color: record.color, size: record.size, occasion: record.occasion, photo: photoUrl });
+          existingIds.add(inc.id);
+          added++;
+        } else {
+          skipped++;
+        }
+      }
+      await cacheAll(items);
+      renderFilters();
+      renderGrid();
+      document.getElementById('menuDropdown').classList.remove('open');
+      alert(`Copia importada: ${added} cartera(s) nueva(s) agregada(s)${skipped ? `, ${skipped} ya existían y no se duplicaron` : ''}.`);
+    } catch(err){
+      console.error(err);
+      alert('No se pudo importar. Revisa tu conexión a internet, o que sea una copia de seguridad exportada desde esta app.');
+    }
+    document.getElementById('importFileInput').value = '';
+  };
+  reader.readAsText(file);
 });
 
-function abrirModalAPV() {
-  const montoInput = obtenerValorNumerico('monto');
-  const modal = document.getElementById('modalAPV');
-  const contenido = document.getElementById('contenidoModalAPV');
-  
-  if (montoInput === 0) {
-    contenido.innerHTML = `<p>Por favor, ingresa primero un <strong>Sueldo Base</strong> en la calculadora para evaluar la conveniencia tributaria.</p>`;
-  } else {
-    const utm = INDICADORES.utm;
-    const baseUTM = montoInput / utm;
-    let recomendacion = "";
-    
-    if (baseUTM <= 13.5) {
-      recomendacion = `
-        <p><strong>Régimen Recomendado: RÉGIMEN A</strong></p>
-        <p>Tu nivel de renta se encuentra en el <strong>tramo exento de impuesto (0%)</strong>.</p>
-        <p>En el Régimen B obtendrías $0 de ahorro tributario. En cambio, en el <strong>Régimen A</strong> el Estado te regala un <strong>15% adicional</strong> sobre todo lo que ahorres (con tope de 6 UTM al año).</p>`;
-    } else if (baseUTM <= 30) {
-      recomendacion = `
-        <p><strong>Régimen Recomendado: RÉGIMEN A</strong></p>
-        <p>Tu renta está en el tramo del <strong>4% de Impuesto Único</strong>.</p>
-        <p>La bonificación estatal del <strong>15% (Régimen A)</strong> es considerablemente mayor al 4% de rebaja impositiva que obtendrías en el Régimen B.</p>`;
-    } else if (baseUTM <= 50) {
-      recomendacion = `
-        <p><strong>Régimen Recomendado: RÉGIMEN A / MIXTO</strong></p>
-        <p>Tu renta está en el tramo del <strong>8% de Impuesto Único</strong>.</p>
-        <p>El Régimen A (15% del Estado) sigue siendo superior para aportes moderados. Si proyectas ahorrar montos muy altos (más de 40 UTM al año), te convendrá una estrategia mixta (A hasta el tope estatal y B para el resto).</p>`;
-    } else {
-      recomendacion = `
-        <p><strong>Régimen Recomendado: RÉGIMEN B</strong></p>
-        <p>Tu renta está en un tramo alto de Impuesto Único (<strong>13.5% o superior</strong>).</p>
-        <p>Te conviene el <strong>Régimen B</strong>, ya que el ahorro directo de impuestos al descontar tu APV de la base tributable supera el beneficio del Régimen A y no tiene el tope tan acotado de las 6 UTM anuales.</p>`;
-    }
-    contenido.innerHTML = recomendacion;
-  }
-  modal.style.display = 'flex';
-}
-
-function cerrarModalAPV() {
-  document.getElementById('modalAPV').style.display = 'none';
-}
+// Init
+initApp();
+})();
 </script>
 </body>
 </html>
